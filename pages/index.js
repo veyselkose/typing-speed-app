@@ -58,12 +58,21 @@ export default function Home() {
           <button onClick={(e) => dispatch(changeText(text))}>Tekrar</button>
           <div className="bg-red-500 p-4 rounded-lg">
             <h1 className="text-4xl font-bold text-center mb-4">Test Sonucu</h1>
-            <h1 className="text-2xl font-bold text-center mb-4">
+            <h2 className="text-2xl font-bold text-center mb-4">
               Hız: {Math.round((allTypedEntries.length / 5 - accuracy.incorrect) / 1)} / Dakika
-            </h1>
-            <h1 className="text-2xl font-bold text-center mb-4">
-              Doğruluk: {((accuracy.incorrect + accuracy.correct) / accuracy.correct) * 100}%
-            </h1>
+            </h2>
+            <h2 className="text-2xl font-bold text-center mb-4">
+              keystrokes: {allTypedEntries.length}
+            </h2>
+            <h2 className="text-2xl font-bold text-center mb-4">
+              Accuracy: {(accuracy.correct / (accuracy.incorrect + accuracy.correct)) * 100}%
+            </h2>
+            <h2 className="text-2xl font-bold text-center mb-4">
+              Correct words: {accuracy.correct}
+            </h2>
+            <h2 className="text-2xl font-bold text-center mb-4">
+              Wrong words: {accuracy.incorrect}
+            </h2>
           </div>
         </div>
       )}
