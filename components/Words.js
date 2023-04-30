@@ -37,7 +37,7 @@ function Words() {
   }, [wordIndex]);
 
   return (
-    <div className="bg-red-200 shadow-lg mx-auto p-2 h-[150px] w-[900px] rounded-lg overflow-hidden">
+    <div className="bg-white shadow-lg p-2 h-[150px] w-full rounded-lg overflow-hidden">
       <div className={`words flex flex-wrap gap-y-2 relative`} style={{ top: "-" + top + "px" }}>
         {words.map((item, index) => {
           return (

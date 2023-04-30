@@ -1,15 +1,17 @@
 import { Inter } from "next/font/google";
-import Words from "../components/Words";
+import Words from "@/components/Words";
+import Result from "@/components/Result";
+import TypingInput from "@/components/TypingInput";
 import { useDispatch, useSelector } from "react-redux";
-import { changeInput, changeText, changeTime, getData } from "@/store/typingSlice";
+import { changeText, changeTime, getData } from "@/store/typingSlice";
 import { useEffect } from "react";
+import Countdown from "@/components/Countdown";
+import RestartBtn from "@/components/RestartBtn";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   const dispatch = useDispatch();
-  const { data, text, accuracy, input, time, status, allTypedEntries } = useSelector(
-    (state) => state.typing
-  );
+  const { data, text, time } = useSelector((state) => state.typing);
   useEffect(() => {
     dispatch(getData({ lang: "tr" }));
   }, []);
@@ -19,63 +21,48 @@ export default function Home() {
     return () => clearInterval(timer);
   }, [time]);
   return (
-    <main className={`${inter.className} h-screen`}>
-      <h1 className="text-5xl">{time}</h1>
-      <select
-        name="lang"
-        id="lang"
-        defaultValue={"tr"}
-        onChange={(e) => dispatch(getData({ lang: e.target.value }))}
-      >
-        <option value="tr">Türkçe</option>
-        <option value="en">İngilizce</option>
-      </select>
-      <select
-        name="wordtext"
-        id="wordtext"
-        defaultValue={text}
-        onChange={(e) => dispatch(changeText(e.target.value))}
-      >
-        {data.map((item) => {
-          return (
-            <option key={item.name} value={item.name}>
-              {item.name}
-            </option>
-          );
-        })}
-      </select>
-      <h1 className="text-6xl font-bold text-center mb-4">Typing Test</h1>
+    <main className={`${inter.className} container`}>
+      <h1 className="text-5xl font-bold text-center mt-4 mb-14">Typing Test</h1>
+      <div className="w-full lg:w-[900px] mx-auto">
+        <div className="flex flex-col md:flex-row items-center mb-4 gap-4">
+          <select
+            name="lang"
+            id="lang"
+            className="dropdown"
+            defaultValue={"tr"}
+            onChange={(e) => dispatch(getData({ lang: e.target.value }))}
+          >
+            <option value="tr">Türkçe</option>
+            <option value="en">İngilizce</option>
+          </select>
 
-      <Words />
-      <input
-        value={input}
-        type="text"
-        placeholder="metin girin"
-        onChange={(e) => dispatch(changeInput(e.target.value))}
-      />
-      {time === 0 && status && (
-        <div className="">
-          <button onClick={(e) => dispatch(changeText(text))}>Tekrar</button>
-          <div className="bg-red-500 p-4 rounded-lg">
-            <h1 className="text-4xl font-bold text-center mb-4">Test Sonucu</h1>
-            <h2 className="text-2xl font-bold text-center mb-4">
-              Hız: {Math.round((allTypedEntries.length / 5 - accuracy.incorrect) / 1)} / Dakika
-            </h2>
-            <h2 className="text-2xl font-bold text-center mb-4">
-              keystrokes: {allTypedEntries.length}
-            </h2>
-            <h2 className="text-2xl font-bold text-center mb-4">
-              Accuracy: {(accuracy.correct / (accuracy.incorrect + accuracy.correct)) * 100}%
-            </h2>
-            <h2 className="text-2xl font-bold text-center mb-4">
-              Correct words: {accuracy.correct}
-            </h2>
-            <h2 className="text-2xl font-bold text-center mb-4">
-              Wrong words: {accuracy.incorrect}
-            </h2>
-          </div>
+          <select
+            name="wordtext"
+            id="wordtext"
+            className="dropdown"
+            defaultValue={text}
+            onChange={(e) => dispatch(changeText(e.target.value))}
+          >
+            {data.map((item) => {
+              return (
+                <option key={item.name} value={item.name}>
+                  {item.name}
+                </option>
+              );
+            })}
+          </select>
+          <Countdown />
         </div>
-      )}
+
+        <Words />
+      </div>
+
+      <div className="flex justify-center mt-4">
+        <TypingInput />
+        <RestartBtn />
+      </div>
+
+      {<Result />}
     </main>
   );
 }

@@ -21,6 +21,9 @@ const initialState = {
   wordIndex: 0,
   time: 0,
   allTypedEntries: "",
+  result: [
+   
+  ],
   accuracy: {
     correct: 0,
     incorrect: 0,
@@ -58,7 +61,16 @@ export const typingSlice = createSlice({
     changeTime: (state) => {
       state.time--;
     },
-
+    addResult: (state, action) => {
+      state.result.push({
+        speed: Math.round((state.allTypedEntries.length / 5 - state.accuracy.incorrect) / 1),
+        keystrokes: state.allTypedEntries.length,
+        accuracy:
+          ((state.accuracy.correct / (state.accuracy.incorrect + state.accuracy.correct)) * 100).toFixed(2),
+        correctWords: state.accuracy.correct,
+        wrongWords: state.accuracy.incorrect,
+      });
+    },
     changeInput: (state, action) => {
       if (state.time === 0 && state.status === false) {
         state.time = 60;
@@ -75,8 +87,10 @@ export const typingSlice = createSlice({
             state.accuracy.incorrect++;
             state.accuracyIndex.incorrect.push(state.wordIndex);
           }
-          state.input = "";
-          state.wordIndex++;
+          if (action.payload !== " ") {
+            state.input = "";
+            state.wordIndex++;
+          }
         } else {
           state.input = action.payload;
         }
@@ -109,6 +123,6 @@ export const typingSlice = createSlice({
   },
 });
 
-export const { changeText, changeInput, changeTime } = typingSlice.actions;
+export const { changeText, addResult, changeInput, changeTime } = typingSlice.actions;
 
 export default typingSlice.reducer;
